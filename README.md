@@ -1,6 +1,6 @@
 # PDF Oluşturucu
 
-Bu proje, kullanıcının girdiği metni tamamen istemci tarafında PDF dosyasına çevirip indirmesini sağlar. jsPDF kütüphanesi ile oluşturulmuş basit bir web uygulamasıdır.
+Bu proje, kullanıcının girdiği metni tamamen istemci tarafında PDF dosyasına çevirip indirmesini sağlar. jsPDF kütüphanesi ile oluşturulmuş basit bir web uygulamasıdır. Türkçe karakterler için gömülü yazı tipi kullanır.
 
 ## Kullanım
 
