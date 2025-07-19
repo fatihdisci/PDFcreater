@@ -1,12 +1,12 @@
 # PDF Oluşturucu
 
-Bu proje, kullanıcının girdiği metni tamamen istemci tarafında PDF dosyasına çevirip indirmesini sağlar. jsPDF kütüphanesi ile oluşturulmuş basit bir web uygulamasıdır.
+Bu proje, kullanıcının girdiği metni tamamen istemci tarafında PDF dosyasına çevirip indirmesini sağlar. jsPDF kütüphanesi ile oluşturulmuş basit bir web uygulamasıdır. Türkçe karakterler için gömülü yazı tipi kullanır ve uzun metinlerde otomatik sayfa ekler.
 
 ## Kullanım
 
 1. `index.html` dosyasını modern bir tarayıcıda açın.
 2. Metninizi alandaki kutuya yazın.
-3. **PDF İndir** butonuna basın; tarayıcı `metin.pdf` dosyasını indirecektir.
+3. **PDF İndir** butonuna basın; dosya `metin.pdf` olarak indirilecektir.
 
 ## GitHub Pages Yayınlama
 
