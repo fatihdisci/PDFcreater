@@ -2,15 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const ta = document.getElementById('textInput');
   const charCount = document.getElementById('charCount');
   const wordCount = document.getElementById('wordCount');
-  const marginInput = document.getElementById('marginInput');
-  const fontSizeInput = document.getElementById('fontSizeInput');
-  const lineHeightInput = document.getElementById('lineHeightInput');
-  const fontSelect = document.getElementById('fontSelect');
   const themeToggle = document.getElementById('themeToggle');
   const pasteBtn = document.getElementById('pasteBtn');
-  const loremBtn = document.getElementById('loremBtn');
-  const turkishBtn = document.getElementById('turkishBtn');
-  const fiveBtn = document.getElementById('fiveBtn');
   const downloadBtn = document.getElementById('downloadBtn');
   const shareBtn = document.getElementById('shareBtn');
 
@@ -41,11 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function applySample(text) {
-    ta.value = text;
-    updateCounter();
-    saveText();
-  }
 
   function toggleTheme() {
     document.body.classList.toggle('dark');
@@ -58,48 +46,55 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function addFooter(doc, page, total, margin) {
-    const date = new Date().toLocaleDateString('tr-TR');
-    const text = `s. ${page} / ${total} - ${date}`;
+  function addFooter(doc, page, margin) {
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     doc.setFontSize(10);
-    doc.text(text, pageWidth - margin, pageHeight - margin / 2, { align: 'right' });
+    doc.text(`\u2013 ${page} \u2013`, pageWidth / 2, pageHeight - margin / 2, { align: 'center' });
   }
 
   function createPdf(share) {
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    if (typeof DEJAVU_SERIF !== 'undefined') {
-      doc.addFileToVFS('DejaVuSans.ttf', DEJAVU_SERIF);
-      doc.addFont('DejaVuSans.ttf', 'DejaVu', 'normal');
-    }
-    const margin = parseInt(marginInput.value) || 40;
-    const fontSize = parseInt(fontSizeInput.value) || 12;
-    const lineHeight = parseFloat(lineHeightInput.value) || 1.4;
-    const font = fontSelect.value;
-    doc.setFont(font === 'DejaVu' ? 'DejaVu' : font);
-    doc.setFontSize(fontSize);
+    const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+
+    const MARGIN = 25; // 2.5 cm
+    const FONT_SIZE = 11; // pt
+    const LINE_HEIGHT = 1.5;
+    const INDENT = 12.5; // mm
+    const PARA_AFTER = 6 * 0.352778; // 6pt in mm
+    const PT_TO_MM = 0.352778;
+
+    doc.setFont('Times', 'normal');
+    doc.setFontSize(FONT_SIZE);
     doc.setProperties({ title: 'Metin', subject: 'PDF Olu\u015fturucu', author: '' });
 
+    const lineHeightMm = FONT_SIZE * LINE_HEIGHT * PT_TO_MM;
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
-    const usableWidth = pageWidth - margin * 2;
-    const lines = doc.splitTextToSize(ta.value, usableWidth);
-    let cursorY = margin;
-    lines.forEach(line => {
-      if (cursorY + fontSize > pageHeight - margin) {
-        doc.addPage();
-        cursorY = margin;
-      }
-      doc.text(line, margin, cursorY);
-      cursorY += fontSize * lineHeight;
+    const usableWidth = pageWidth - MARGIN * 2;
+
+    const paragraphs = ta.value.split(/\n\s*\n/);
+    let cursorY = MARGIN;
+
+    paragraphs.forEach(para => {
+      const lines = doc.splitTextToSize(para.trim(), usableWidth - INDENT);
+      lines.forEach((line, idx) => {
+        if (cursorY + lineHeightMm > pageHeight - MARGIN) {
+          doc.addPage();
+          cursorY = MARGIN;
+        }
+        const x = idx === 0 ? MARGIN + INDENT : MARGIN;
+        const maxWidth = usableWidth - (idx === 0 ? INDENT : 0);
+        doc.text(line, x, cursorY, { maxWidth, align: 'justify' });
+        cursorY += lineHeightMm;
+      });
+      cursorY += PARA_AFTER;
     });
 
     const total = doc.internal.getNumberOfPages();
     for (let i = 1; i <= total; i++) {
       doc.setPage(i);
-      addFooter(doc, i, total, margin);
+      addFooter(doc, i, MARGIN);
     }
 
     const blob = doc.output('blob');
@@ -117,9 +112,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   ta.addEventListener('input', () => { updateCounter(); saveText(); });
   pasteBtn.addEventListener('click', pasteFromClipboard);
-  loremBtn.addEventListener('click', () => applySample(window.sampleTexts.lorem));
-  turkishBtn.addEventListener('click', () => applySample(window.sampleTexts.turkish));
-  fiveBtn.addEventListener('click', () => applySample(window.sampleTexts.fivePage()));
   themeToggle.addEventListener('click', toggleTheme);
   downloadBtn.addEventListener('click', () => createPdf(false));
   shareBtn.addEventListener('click', () => createPdf(true));
