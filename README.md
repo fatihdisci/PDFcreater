@@ -3,12 +3,11 @@
 İstemci tarafında çalışan bu küçük uygulama, yazdığınız metni belirli biçim kurallarına göre PDF dosyasına dönüştürür. Herhangi bir sunucu kodu bulunmaz; GitHub Pages üzerinden kolayca yayınlanabilir.
 
 ## Özellikler
-- Panodan yapıştırma, otomatik odaklanan metin alanı
+- Otomatik odaklanan metin alanı
 - Yazarken canlı karakter ve kelime sayacı
 - LocalStorage ile otomatik kaydetme ve geri yükleme
 - Her sayfaya numaralandırma içeren altbilgi
-- Işık/koyu tema geçişi, varsayılan Times New Roman yazı tipi
-- Web Share API ile oluşturulan PDF’yi paylaşabilme
+- Varsayılan Times New Roman yazı tipi
 - jsPDF metadata bilgileri
 - Sağ altta sürüm bilgisi: **v0.4 (21‑07‑2025)**
 
