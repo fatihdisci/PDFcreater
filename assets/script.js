@@ -2,10 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const ta = document.getElementById('textInput');
   const charCount = document.getElementById('charCount');
   const wordCount = document.getElementById('wordCount');
-  const themeToggle = document.getElementById('themeToggle');
-  const pasteBtn = document.getElementById('pasteBtn');
   const downloadBtn = document.getElementById('downloadBtn');
-  const shareBtn = document.getElementById('shareBtn');
 
   function updateCounter() {
     const text = ta.value;
@@ -23,28 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCounter();
   }
 
-  async function pasteFromClipboard() {
-    try {
-      const text = await navigator.clipboard.readText();
-      ta.value = text;
-      updateCounter();
-      saveText();
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
-
-  function toggleTheme() {
-    document.body.classList.toggle('dark');
-    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
-  }
-
-  function loadTheme() {
-    if (localStorage.getItem('theme') === 'dark') {
-      document.body.classList.add('dark');
-    }
-  }
+  
 
   function addFooter(doc, page, margin) {
     const pageWidth = doc.internal.pageSize.getWidth();
@@ -53,9 +29,16 @@ document.addEventListener('DOMContentLoaded', () => {
     doc.text(`\u2013 ${page} \u2013`, pageWidth / 2, pageHeight - margin / 2, { align: 'center' });
   }
 
-  function createPdf(share) {
+  function createPdf() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+    if (typeof DEJAVU_SERIF !== 'undefined') {
+      doc.addFileToVFS('TimesNewRoman.ttf', DEJAVU_SERIF);
+      doc.addFont('TimesNewRoman.ttf', 'TimesNewRoman', 'normal');
+      doc.setFont('TimesNewRoman', 'normal');
+    } else {
+      doc.setFont('Times', 'normal');
+    }
 
     const MARGIN = 25; // 2.5 cm
     const FONT_SIZE = 11; // pt
@@ -64,7 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const PARA_AFTER = 6 * 0.352778; // 6pt in mm
     const PT_TO_MM = 0.352778;
 
-    doc.setFont('Times', 'normal');
     doc.setFontSize(FONT_SIZE);
     doc.setProperties({ title: 'Metin', subject: 'PDF Olu\u015fturucu', author: '' });
 
@@ -97,26 +79,16 @@ document.addEventListener('DOMContentLoaded', () => {
       addFooter(doc, i, MARGIN);
     }
 
-    const blob = doc.output('blob');
-    if (share) {
-      window.sharePdf && window.sharePdf(blob);
-    } else {
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'metin.pdf';
-      link.click();
-      URL.revokeObjectURL(url);
-    }
+    const url = URL.createObjectURL(doc.output('blob'));
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'metin.pdf';
+    link.click();
+    URL.revokeObjectURL(url);
   }
 
   ta.addEventListener('input', () => { updateCounter(); saveText(); });
-  pasteBtn.addEventListener('click', pasteFromClipboard);
-  themeToggle.addEventListener('click', toggleTheme);
-  downloadBtn.addEventListener('click', () => createPdf(false));
-  shareBtn.addEventListener('click', () => createPdf(true));
-
-  loadTheme();
+  downloadBtn.addEventListener('click', createPdf);
   loadText();
   ta.focus();
 });
