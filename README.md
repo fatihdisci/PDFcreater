@@ -1,17 +1,24 @@
 # PDF Oluşturucu
 
-Bu proje, kullanıcının girdiği metni tamamen istemci tarafında PDF dosyasına çevirip indirmesini sağlar. jsPDF kütüphanesi ile oluşturulmuş basit bir web uygulamasıdır. Türkçe karakterler için gömülü yazı tipi kullanır.
+İstemci tarafında çalışan bu küçük uygulama, yazdığınız metni ayarlanabilir seçeneklerle PDF dosyasına dönüştürür. Herhangi bir sunucu kodu bulunmaz; GitHub Pages üzerinden kolayca yayınlanabilir.
 
-## Kullanım
+## Özellikler
+- Panodan yapıştırma, otomatik odaklanan metin alanı
+- Yazarken canlı karakter ve kelime sayacı
+- LocalStorage ile otomatik kaydetme ve geri yükleme
+- PDF çıktısı Times New Roman 11 pt, 1.5 satır aralığı ve 2.5 cm kenar boşluğu
+- Her sayfanın altında "– X –" biçiminde numaralandırma
+- Işık/koyu tema geçişi
+- Web Share API ile oluşturulan PDF’yi paylaşabilme
+- jsPDF metadata bilgileri
+- Sağ altta sürüm bilgisi: **v0.4 (21‑07‑2025)**
 
-1. `index.html` dosyasını modern bir tarayıcıda açın.
-2. Metninizi alandaki kutuya yazın.
-3. **PDF İndir** butonuna basın; tarayıcı `metin.pdf` dosyasını indirecektir.
+## Yerel Geliştirme
+1. Depoyu klonlayın ve dizine girin.
+2. Bir statik sunucu başlatın veya `index.html` dosyasını doğrudan açın.
+3. Değişikliklerinizi kaydedip tarayıcıda sayfayı yenileyin.
 
 ## GitHub Pages Yayınlama
-
-1. Bu projeyi GitHub reposu olarak oluşturun ve dosyaları bu repoya ekleyin.
-2. GitHub'ta "Settings" > "Pages" bölümüne gidip ana dalınızı ve `/ (root)` klasörünü seçin.
-3. Kaydettiğinizde birkaç dakika içinde site `https://<kullanici>.github.io/<repo>` adresinden erişilebilir olacaktır.
-
-Projeye katkı veya geri bildirimde bulunmak isteyenler için, kodlar tamamen açık ve basittir.
+1. Projeyi GitHub’da yeni bir depo olarak oluşturup dosyaları gönderin.
+2. `Settings > Pages` menüsünden kaynak olarak **GitHub Actions**'ı seçin.
+3. Ana dalda yapılan her push, `pages.yml` iş akışıyla siteyi otomatik olarak yayına alır.

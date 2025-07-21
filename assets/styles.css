@@ -1,8 +1,27 @@
+:root {
+  --bg-color: #fff;
+  --text-color: #212529;
+  --form-bg: #fff;
+  --font-family: 'DejaVu Sans', sans-serif;
+}
+
 body {
-  background-color: #f2f2f2;
+  font-family: var(--font-family);
+  background: var(--bg-color);
+  color: var(--text-color);
+  min-height: 100vh;
 }
 
 #pdfForm {
-  max-width: 600px;
+  background: var(--form-bg);
+  max-width: 700px;
   margin: auto;
+}
+
+#version {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  font-size: 0.8rem;
+  opacity: 0.6;
 }

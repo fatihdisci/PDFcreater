@@ -1,48 +1,113 @@
-document.getElementById('downloadBtn').addEventListener('click', () => {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
+document.addEventListener('DOMContentLoaded', () => {
+  const ta = document.getElementById('textInput');
+  const charCount = document.getElementById('charCount');
+  const wordCount = document.getElementById('wordCount');
+  const themeToggle = document.getElementById('themeToggle');
+  const pasteBtn = document.getElementById('pasteBtn');
+  const downloadBtn = document.getElementById('downloadBtn');
+  const shareBtn = document.getElementById('shareBtn');
 
-  // Register a font that supports Turkish characters
-  if (typeof DEJAVU_SERIF !== 'undefined') {
-    doc.addFileToVFS('DejaVuSerif.ttf', DEJAVU_SERIF);
-    doc.addFont('DejaVuSerif.ttf', 'DejaVuSerif', 'normal');
-    doc.setFont('DejaVuSerif', 'normal');
+  function updateCounter() {
+    const text = ta.value;
+    charCount.textContent = text.length;
+    wordCount.textContent = (text.trim().match(/\S+/g) || []).length;
   }
 
-  const text = document.getElementById('textInput').value;
-  const pageWidth = doc.internal.pageSize.getWidth();
-  const pageHeight = doc.internal.pageSize.getHeight();
+  function saveText() {
+    localStorage.setItem('pdf_text', ta.value);
+  }
 
-  const paragraphs = text.split(/\r?\n/);
-  let cursorY = 20;
-  const lineHeight = 10;
-  const paragraphSpacing = 5;
+  function loadText() {
+    const saved = localStorage.getItem('pdf_text');
+    if (saved) ta.value = saved;
+    updateCounter();
+  }
 
-  paragraphs.forEach(paragraph => {
-    if (paragraph.trim() === '') {
-      cursorY += paragraphSpacing;
-      return;
+  async function pasteFromClipboard() {
+    try {
+      const text = await navigator.clipboard.readText();
+      ta.value = text;
+      updateCounter();
+      saveText();
+    } catch (e) {
+      console.error(e);
     }
+  }
 
-    const lines = doc.splitTextToSize(paragraph, pageWidth - 30);
-    lines.forEach(line => {
-      if (cursorY > pageHeight - 20) {
-        doc.addPage();
-        cursorY = 20;
-      }
-      doc.text(line, 15, cursorY);
-      cursorY += lineHeight;
+  function toggleTheme() {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+  }
+
+  function loadTheme() {
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark');
+    }
+  }
+
+  function addFooter(doc, page, margin) {
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    doc.setFontSize(10);
+    doc.text(`\u2013 ${page} \u2013`, pageWidth / 2, pageHeight - margin / 2, { align: 'center' });
+  }
+
+  function createPdf(share) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+    const margin = 25; // 2.5 cm
+    const fontSize = 11;
+    const lineHeightMm = fontSize * 1.5 * 0.352777; // pt to mm
+    const indent = 12.5;
+    const paraSpace = 6 * 0.352777;
+    doc.setFont('Times', '');
+    doc.setFontSize(fontSize);
+    doc.setProperties({ title: 'Metin', subject: 'PDF Olu\u015fturucu', author: '' });
+
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    let y = margin;
+    const paragraphs = ta.value.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
+    paragraphs.forEach(p => {
+      const lines = doc.splitTextToSize(p, pageWidth - margin * 2);
+      lines.forEach((line, idx) => {
+        if (y + lineHeightMm > pageHeight - margin) {
+          doc.addPage();
+          y = margin;
+        }
+        const x = margin + (idx === 0 ? indent : 0);
+        doc.text(line, x, y);
+        y += lineHeightMm;
+      });
+      y += paraSpace;
     });
-    cursorY += paragraphSpacing;
-  });
 
-  const blob = doc.output('blob');
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = 'metin.pdf';
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
+      const total = doc.internal.getNumberOfPages();
+      for (let i = 1; i <= total; i++) {
+        doc.setPage(i);
+        addFooter(doc, i, margin);
+      }
+
+    const blob = doc.output('blob');
+    if (share) {
+      window.sharePdf && window.sharePdf(blob);
+    } else {
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'metin.pdf';
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+  }
+
+  ta.addEventListener('input', () => { updateCounter(); saveText(); });
+  pasteBtn.addEventListener('click', pasteFromClipboard);
+  themeToggle.addEventListener('click', toggleTheme);
+  downloadBtn.addEventListener('click', () => createPdf(false));
+  shareBtn.addEventListener('click', () => createPdf(true));
+
+  loadTheme();
+  loadText();
+  ta.focus();
 });
