@@ -1,17 +1,15 @@
 # PDF Oluşturucu
 
-İstemci tarafında çalışan bu küçük uygulama, yazdığınız metni ayarlanabilir seçeneklerle PDF dosyasına dönüştürür. Herhangi bir sunucu kodu bulunmaz; GitHub Pages üzerinden kolayca yayınlanabilir.
+İstemci tarafında çalışan bu küçük uygulama, yazdığınız metni belirli biçim kurallarına göre PDF dosyasına dönüştürür. Herhangi bir sunucu kodu bulunmaz; GitHub Pages üzerinden kolayca yayınlanabilir.
 
 ## Özellikler
 - Panodan yapıştırma, otomatik odaklanan metin alanı
 - Yazarken canlı karakter ve kelime sayacı
 - LocalStorage ile otomatik kaydetme ve geri yükleme
-- Kenar boşluğu, yazı boyutu ve satır aralığı seçebilme
-- Her sayfaya tarihli numaralandırma içeren altbilgi
-- Işık/koyu tema geçişi, varsayılan DejaVu Sans yazı tipi
+- Her sayfaya numaralandırma içeren altbilgi
+- Işık/koyu tema geçişi, varsayılan Times New Roman yazı tipi
 - Web Share API ile oluşturulan PDF’yi paylaşabilme
 - jsPDF metadata bilgileri
-- Lorem ipsum, Türkçe test ve 5 sayfalık örnek metin butonları
 - Sağ altta sürüm bilgisi: **v0.4 (21‑07‑2025)**
 
 ## Yerel Geliştirme
