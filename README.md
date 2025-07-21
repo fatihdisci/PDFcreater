@@ -1,17 +1,25 @@
 # PDF Oluşturucu
 
-Bu proje, kullanıcının girdiği metni tamamen istemci tarafında PDF dosyasına çevirip indirmesini sağlar. jsPDF kütüphanesi ile oluşturulmuş basit bir web uygulamasıdır. Türkçe karakterler için gömülü yazı tipi kullanır.
+İstemci tarafında çalışan bu küçük uygulama, yazdığınız metni ayarlanabilir seçeneklerle PDF dosyasına dönüştürür. Herhangi bir sunucu kodu bulunmaz; GitHub Pages üzerinden kolayca yayınlanabilir.
 
-## Kullanım
+## Özellikler
+- Panodan yapıştırma, otomatik odaklanan metin alanı
+- Yazarken canlı karakter ve kelime sayacı
+- LocalStorage ile otomatik kaydetme ve geri yükleme
+- Kenar boşluğu, yazı boyutu ve satır aralığı seçebilme
+- Her sayfaya tarihli numaralandırma içeren altbilgi
+- Işık/koyu tema geçişi, varsayılan DejaVu Sans yazı tipi
+- Web Share API ile oluşturulan PDF’yi paylaşabilme
+- jsPDF metadata bilgileri
+- Lorem ipsum, Türkçe test ve 5 sayfalık örnek metin butonları
+- Sağ altta sürüm bilgisi: **v0.4 (21‑07‑2025)**
 
-1. `index.html` dosyasını modern bir tarayıcıda açın.
-2. Metninizi alandaki kutuya yazın.
-3. **PDF İndir** butonuna basın; tarayıcı `metin.pdf` dosyasını indirecektir.
+## Yerel Geliştirme
+1. Depoyu klonlayın ve dizine girin.
+2. Bir statik sunucu başlatın veya `index.html` dosyasını doğrudan açın.
+3. Değişikliklerinizi kaydedip tarayıcıda sayfayı yenileyin.
 
 ## GitHub Pages Yayınlama
-
-1. Bu projeyi GitHub reposu olarak oluşturun ve dosyaları bu repoya ekleyin.
-2. GitHub'ta "Settings" > "Pages" bölümüne gidip ana dalınızı ve `/ (root)` klasörünü seçin.
-3. Kaydettiğinizde birkaç dakika içinde site `https://<kullanici>.github.io/<repo>` adresinden erişilebilir olacaktır.
-
-Projeye katkı veya geri bildirimde bulunmak isteyenler için, kodlar tamamen açık ve basittir.
+1. Projeyi GitHub’da yeni bir depo olarak oluşturun ve tüm dosyaları gönderin.
+2. “Settings > Pages” bölümünden ana dalı ve `/ (root)` klasörünü seçin.
+3. Kaydettikten sonra birkaç dakika içinde siteniz `https://<kullanici>.github.io/<repo>` adresinde yayında olacaktır.
